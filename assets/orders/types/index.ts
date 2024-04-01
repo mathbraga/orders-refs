@@ -16,12 +16,12 @@ export type OrdersById = {
   [key: string]: Order[];
 };
 
-// numeroItem is to be used as key
+// key = número_item
 export type OrderEntryById = {
   [key: string]: Omit<Order, 'numeroItem'>;
 };
 
-// order id from file name is used as key
+// key = order id (filename)
 export type OrdersByIdObject = {
   [key: string]: OrderEntryById;
 };

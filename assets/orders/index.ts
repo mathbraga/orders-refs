@@ -19,11 +19,11 @@ const createOrdersObject = async (): Promise<OrdersByIdObject> => {
     const files = await fs.readdir(directoryName);
 
     for (let file of files) {
-      let filePath = path.join(directoryName, file);
-      let fileData = await fs.readFile(filePath, 'utf8');
+      const filePath = path.join(directoryName, file);
+      const fileData = await fs.readFile(filePath, 'utf8');
 
       let orders: OrdersById = {};
-      let orderId = getIdFromFile(file);
+      const orderId = getIdFromFile(file);
 
       orders[orderId] = createValidatedObject<Order, SourceOrder>(
         orderId,
@@ -45,8 +45,8 @@ const createOrdersObject = async (): Promise<OrdersByIdObject> => {
   }
 };
 
-export const getOrders = async () => {
+export const processOrders = async () => {
   const orders = await createOrdersObject();
 
-  console.log(orders);
+  return orders;
 };

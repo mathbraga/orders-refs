@@ -2,23 +2,29 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 import getIdFromFile from '../utils/getIdFromFile';
 import createValidatedObject from '../utils/createValidatedObject';
-import { Reference, SourceReference } from './types';
+import { Reference, ReferencesById, SourceReference } from './types';
 import createReferenceDTO from './createReferenceDTO';
 import validateReferenceFields from './validateReferenceFields';
+import { OrdersByIdObject } from '../orders/types';
+import verifyOrderExistance from './verifyOrderExistance';
+import getOrderQuantitiesById from './getOrderQuantitiesById';
+import verifyReferencesQuantity from './verifyReferencesQuantity';
 
 const dataDirectory: string = 'data/notas';
 const directoryName = path.join(__dirname, '../..', dataDirectory);
 
-const createReferencesObject = async () => {
+const createReferencesObject = async (orders: OrdersByIdObject) => {
+  let referencesById: ReferencesById = {};
+
   try {
     const files = await fs.readdir(directoryName);
 
     for (let file of files) {
-      let filePath = path.join(directoryName, file);
-      let fileData = await fs.readFile(filePath, 'utf8');
+      const filePath = path.join(directoryName, file);
+      const fileData = await fs.readFile(filePath, 'utf8');
 
       let references = {};
-      let refId = getIdFromFile(file);
+      const refId = getIdFromFile(file);
 
       references[refId] = createValidatedObject<Reference, SourceReference>(
         refId,
@@ -26,19 +32,22 @@ const createReferencesObject = async () => {
         createReferenceDTO,
         validateReferenceFields,
       );
-      console.log(references);
+      verifyOrderExistance(orders, references[refId], refId);
 
-      //   orders[orderId] = createValidatedObject(orderId, fileData);
-      //   // check list of entries uniqueness before transforming to object format
-      //   verifyOrdersUnique(orders[orderId], orderId);
-
-      //   // transform to object format for id sequence check
-      //   ordersByIdObject[orderId] = convertOrderDataToObject(orders[orderId]);
-      //   verifyIdSequence(ordersByIdObject[orderId], orderId);
+      referencesById = { ...referencesById, ...references };
     }
+
+    const orderQuantitiesById = getOrderQuantitiesById(referencesById);
+    verifyReferencesQuantity(orderQuantitiesById, orders);
+
+    return referencesById;
   } catch (error) {
     throw error;
   }
 };
 
-createReferencesObject();
+export const processReferences = async (orders: OrdersByIdObject) => {
+  const references = await createReferencesObject(orders);
+
+  return references;
+};
