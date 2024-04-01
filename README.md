@@ -19,7 +19,7 @@ A partir do diretório raiz:
 npx ts-node assets/index.ts
 ```
 
-Um arquivo 'Pendentes.txt' com o resultado vai ser criado dentro do diretório `/data`
+Um arquivo `Pendentes.txt` com o resultado vai ser criado dentro do diretório `/data`
 
 #### Se quiser executar como uma API Rest do NestJS:
 A partir do diretório raiz:
