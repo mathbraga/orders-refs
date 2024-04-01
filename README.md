@@ -28,3 +28,10 @@ npm run start
 ```
 
 Acessando `http://localhost:3000/pendencies` vai ser retornado o resultado.
+
+### Para rodar os testes
+
+A partir do diretório raiz:
+```
+npm run test
+```
