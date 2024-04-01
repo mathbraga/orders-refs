@@ -1,8 +1,11 @@
 import { Injectable } from '@nestjs/common';
+import processOrdersAndRefs from '../assets';
 
 @Injectable()
 export class AppService {
-  getHello(): string {
-    return 'hi';
+  async getPendencies(): Promise<string> {
+    const pendencies = await processOrdersAndRefs();
+
+    return pendencies;
   }
 }

@@ -10,23 +10,9 @@ export type Reference = {
   quantidade: number;
 };
 
+// key = reference id (from filename)
 export type ReferencesById = {
   [key: string]: Reference[];
-};
-
-// numeroItem is used as key
-export type QuantityByOrderId = {
-  [key: string]: Pick<Reference, 'quantidade'>;
-};
-
-// idPedido is used as key
-export type ReferenceEntryById = {
-  [key: string]: QuantityByOrderId;
-};
-
-// reference id from file name is used as key
-export type ReferencesByIdObject = {
-  [key: string]: ReferenceEntryById;
 };
 
 /**
